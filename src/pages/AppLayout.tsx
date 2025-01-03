@@ -8,19 +8,13 @@ import Sidebar from "@/components/app/Sidebar";
 
 const AppLayout = () => {
   return (
-    <div className="w-full">
-      <div className="flex h-screen bg-gray-900 text-gray-200">
-        {/* Sidebar */}
-        <div className="w-64 bg-gray-800">
-          <Sidebar />
-        </div>
+    <section className="flex">
+      <Sidebar />
 
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto bg-gray-900 w-full">
-          <Outlet />
-        </div>
+      <div className="p-2 text-xl text-gray-900 font-semibold">
+        <Outlet />
       </div>
-    </div>
+    </section>
   );
 };
 
