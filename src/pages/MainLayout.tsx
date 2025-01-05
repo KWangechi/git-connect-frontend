@@ -1,6 +1,3 @@
-// AppLayout.tsx
-// This Layout has 2 parts: sidebar with: /feed, /developers and the Main Page
-
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/app/Sidebar";
 
