@@ -20,7 +20,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen text-gray-300 overflow-auto">
+    <div className="flex items-center justify-center min-h-screen text-gray-300 overflow-auto mt-8">
       <div className="w-full max-w-xl p-8 bg-gray-800 rounded-2xl">
         <div className="">
           <div className="flex items-center justify-center">
@@ -172,7 +172,7 @@ const Register = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-400">
             Already have an account?{" "}
-            <Link to="register" className="text-yellow-400 hover:underline">
+            <Link to="/login" className="text-yellow-400 hover:underline">
               Login
             </Link>
           </p>

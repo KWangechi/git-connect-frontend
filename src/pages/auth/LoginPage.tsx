@@ -3,6 +3,7 @@ import { loginSchema } from "../../utils/zodSchema";
 import { LoginCredentials } from "../../utils/types";
 import { useForm } from "react-hook-form";
 import useAuth from "@/state-management/auth";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const {
@@ -21,7 +22,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen text-gray-300">
-      <div className="w-full max-w-xl p-8 bg-gray-800 rounded-2xl">
+      <div className="w-full max-w-xl p-8 bg-gray-900 rounded-2xl">
         <div className="">
           <div className="flex items-center justify-center">
             <img src="/git_connect_logo.png" alt="Git Connect" className="h-8 w-auto" />
@@ -89,9 +90,9 @@ const LoginPage = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-400">
             Don't have an account?{" "}
-            <a href="/register" className="text-yellow-400 hover:underline">
+            <Link to="/register" className="text-yellow-400 hover:underline">
               Sign Up
-            </a>
+            </Link>
           </p>
         </div>
       </div>

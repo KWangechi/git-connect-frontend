@@ -1,10 +1,4 @@
-// import MainLayout from "/src/pages/app/MainLayout";
-// import HomePage from "/src/app/components/HomePage";
-// import LoginPage from "/src/pages/auth/LoginPage";
-// import RegisterPage from "/src/pages/auth/RegisterPage";
-// import ProtectedRoute from "/src/components/ProtectedRoute";
-// import RedirectIfAuthenticated from "/src/components/RedirectIfAuthenticated";
-import { Outlet } from "react-router-dom";
+import { Outlet, useRoutes } from "react-router-dom";
 import useAuth from "@/state-management/auth";
 import MainLayout from "@/pages/MainLayout";
 import Home from "@/components/app/Home";
@@ -12,39 +6,39 @@ import RedirectIfAuthenticated from "@/components/app/RedirectIfAuthenticated";
 import LoginPage from "@/pages/auth/LoginPage";
 import Register from "@/pages/auth/RegisterPage";
 import ProtectedRoute from "@/components/app/ProtectedRoute";
+import PageNotFound from "@/pages/PageNotFound";
 
-function useRoutes() {
+function AppRoutes() {
   const { user, isAuthenticated } = useAuth();
 
-  const routes = [
+  const routes = useRoutes([
     {
       path: "/",
       element: (
-        <ProtectedRoute
-          isAuthenticated={isAuthenticated}
-          user={user}
-          children={<MainLayout />}
-        />
+        <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
+          <MainLayout />
+        </ProtectedRoute>
       ),
       children: [{ path: "", element: <Home /> }],
     },
     {
-      path: "/auth",
+      path: "/",
       element: (
-        <RedirectIfAuthenticated
-          isAuthenticated={isAuthenticated}
-          user={user}
-          children={<Outlet />}
-        />
+        <RedirectIfAuthenticated isAuthenticated={isAuthenticated} user={user}>
+          <Outlet />
+        </RedirectIfAuthenticated>
       ),
       children: [
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <Register /> },
       ],
     },
-  ];
-
-  return { routes };
+    {
+      path: "*",
+      element: <PageNotFound />,
+    },
+  ]);
+  return routes;
 }
 
-export { useRoutes };
+export default AppRoutes;

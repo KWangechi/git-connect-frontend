@@ -13,15 +13,13 @@ function useAuth() {
   // Fetch user from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    const isAuthenticated = localStorage.getItem("accessToken") ? true : false;
 
     if (savedUser && isAuthenticated) {
       setUser(JSON.parse(savedUser));
       setIsAuthenticated(true);
-    } else {
-      navigate("/auth/login");
-    }
-  }, [navigate]);
+    } 
+  }, []);
 
   // Login function
   const login = async (user: LoginCredentials) => {
