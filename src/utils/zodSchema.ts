@@ -1,11 +1,20 @@
 import { z } from "zod";
 
+export const loginSchema = z.object({
+  emailAddress: z.string().email({
+    message: "Invalid email address",
+  }),
+  password: z.string(),
+});
+
 export const userSchema = z
   .object({
     firstName: z.string().min(2).max(20),
     lastName: z.string().min(2).max(20),
     username: z.string().min(3).max(20),
-    emailAddress: z.string().email(),
+    emailAddress: z.string().email({
+      message: "Invalid email address",
+    }),
     password: z.string().min(6).max(20),
     confirmPassword: z.string().min(6).max(20),
   })
