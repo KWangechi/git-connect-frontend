@@ -24,6 +24,13 @@ function Sidebar() {
       <div>
         {/* Logo Section */}
         <div className="flex justify-between p-4 border-b border-gray-700">
+          <div className="flex items-center">
+            <img
+              src="/git_connect_logo.png"
+              alt="Git Connect"
+              className="h-8 w-auto"
+            />
+          </div>
           <h1 className="text-lg font-bold text-yellow-500">Git Connect</h1>
           <div className="flex justify-end items-center">
             <MenuIcon
@@ -47,7 +54,8 @@ function Sidebar() {
                 </div>
                 <span
                   className={`whitespace-pre duration-500 group-hover:text-yellow-500 ${
-                    !open && "opacity-0 translate-x-28 overflow-hidden hover:rounded-lg"
+                    !open &&
+                    "opacity-0 translate-x-28 overflow-hidden hover:rounded-lg"
                   }`}
                 >
                   {item.label}

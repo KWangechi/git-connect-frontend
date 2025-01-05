@@ -1,14 +1,30 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../../utils/zodSchema";
+import { LoginCredentials } from "../../utils/types";
+import { useForm } from "react-hook-form";
+import useAuth from "@/state-management/auth";
+
 const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginCredentials>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const { login } = useAuth();
+
+  const handleLogin = async (data: LoginCredentials) => {
+    await login(data);
+  };
+
   return (
     <div className="flex items-center justify-center h-screen text-gray-300">
       <div className="w-full max-w-xl p-8 bg-gray-800 rounded-2xl">
         <div className="">
           <div className="flex items-center justify-center">
-            <img
-              src="/vite.svg"
-              alt="Git Connect"
-              className="h-8 w-auto"
-            />
+            <img src="/git_connect_logo.png" alt="Git Connect" className="h-8 w-auto" />
           </div>
         </div>
         {/* Page Title */}
@@ -17,7 +33,7 @@ const LoginPage = () => {
         </h2>
 
         {/* Login Form */}
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(handleLogin)}>
           {/* Email/Username Field */}
           <div>
             <label
@@ -27,12 +43,15 @@ const LoginPage = () => {
               Username/Email
             </label>
             <input
+              {...register("emailAddress")}
               type="text"
               id="email"
+              name="emailAddress"
               className="mt-1 block w-full p-2 bg-gray-700 border border-gray-600 rounded shadow-sm"
               placeholder="Enter your email or username"
               required
             />
+            <p className="text-red-500 pt-1">{errors.emailAddress?.message}</p>
           </div>
 
           {/* Password Field */}
@@ -44,12 +63,15 @@ const LoginPage = () => {
               Password
             </label>
             <input
+              {...register("password")}
               type="password"
               id="password"
+              name="password"
               className="mt-1 block w-full p-2 bg-gray-700 border border-gray-600 rounded"
               placeholder="Enter your password"
               required
             />
+            <p className="text-red-500 pt-1">{errors.password?.message}</p>
           </div>
 
           {/* Login Button */}
