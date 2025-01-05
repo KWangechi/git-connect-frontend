@@ -24,7 +24,7 @@ const LoginPage = () => {
       <div className="w-full max-w-xl p-8 bg-gray-800 rounded-2xl">
         <div className="">
           <div className="flex items-center justify-center">
-            <img src="/vite.svg" alt="Git Connect" className="h-8 w-auto" />
+            <img src="/git_connect_logo.png" alt="Git Connect" className="h-8 w-auto" />
           </div>
         </div>
         {/* Page Title */}
