@@ -18,8 +18,10 @@ function useAuth() {
     if (savedUser && isAuthenticated) {
       setUser(JSON.parse(savedUser));
       setIsAuthenticated(true);
+    } else {
+      navigate("/auth/login");
     }
-  }, []);
+  }, [navigate]);
 
   // Login function
   const login = async (user: LoginCredentials) => {
@@ -45,7 +47,7 @@ function useAuth() {
     }
   };
 
-  // Register function (you can implement it similarly to `login`)
+  // Register function
   const registerUser = async (newUser: User) => {
     setLoading(true);
     try {

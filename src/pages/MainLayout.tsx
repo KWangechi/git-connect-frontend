@@ -4,8 +4,6 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/app/Sidebar";
 
-// import { Sidebar } from "lucide-react";
-
 const MainLayout = () => {
   return (
     <section className="flex">

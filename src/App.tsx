@@ -1,16 +1,23 @@
 // import ReactDOM from "react-dom/client";
-import { Routes, Route } from "react-router-dom";
-import MainLayout from "./pages/MainLayout";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
+import { Route, Routes } from "react-router-dom";
+import { useRoutes } from "./routes";
 
 export default function App() {
+  const { routes } = useRoutes();
   return (
     <div>
       <Routes>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="/" element={<MainLayout />}></Route>
+        {routes.map(({ path, element, children }) => (
+          <Route key={path} path={path} element={element}>
+            {children?.map((child) => (
+              <Route
+                key={child.path}
+                path={child.path}
+                element={child.element}
+              />
+            ))}
+          </Route>
+        ))}
       </Routes>
     </div>
   );
