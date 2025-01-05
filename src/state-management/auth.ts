@@ -46,7 +46,7 @@ function useAuth() {
   };
 
   // Register function (you can implement it similarly to `login`)
-  const register = async (newUser: User) => {
+  const registerUser = async (newUser: User) => {
     setLoading(true);
     try {
       const { data } = await api.post("/auth/register", newUser);
@@ -83,7 +83,7 @@ function useAuth() {
     }
   };
 
-  return { user, isAuthenticated, loading, login, logout, register };
+  return { user, isAuthenticated, loading, login, logout, registerUser };
 }
 
 export default useAuth;
