@@ -3,7 +3,7 @@ import { userSchema } from "../../utils/zodSchema";
 import { User } from "../../utils/types";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import useAuth from "@/state-management/auth";
+import useAuth from "@/hooks/use-auth";
 
 const Register = () => {
   const { registerUser } = useAuth();
@@ -37,10 +37,7 @@ const Register = () => {
         </h2>
 
         {/* Login Form */}
-        <form
-          className="space-y-6"
-          onSubmit={handleSubmit(handleRegister)}
-        >
+        <form className="space-y-6" onSubmit={handleSubmit(handleRegister)}>
           {/* Firstname Field */}
           <div>
             <label

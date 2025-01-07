@@ -1,4 +1,9 @@
 import AppRoutes from "@/routes/index";
+import AuthProvider from "./components/context/AuthProvider";
 export default function App() {
-  return <AppRoutes />;
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
 }

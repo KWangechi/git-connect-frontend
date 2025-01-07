@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../utils/zodSchema";
 import { LoginCredentials } from "../../utils/types";
 import { useForm } from "react-hook-form";
-import useAuth from "@/state-management/auth";
+import useAuth from "@/hooks/use-auth";
 import { Link } from "react-router-dom";
 
 const LoginPage = () => {

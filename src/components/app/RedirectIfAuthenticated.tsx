@@ -1,15 +1,14 @@
-import { User } from "@/utils/types";
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const RedirectIfAuthenticated = ({
-  isAuthenticated,
-  user,
   children,
 }: {
-  isAuthenticated: boolean;
-  user: User | null;
   children: React.ReactNode;
 }) => {
+  const { user, isAuthenticated } = useContext(AuthContext);
+
   return isAuthenticated && user ? (
     <Navigate to="/" replace />
   ) : (

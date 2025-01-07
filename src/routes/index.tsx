@@ -1,5 +1,4 @@
 import { Outlet, useRoutes } from "react-router-dom";
-import useAuth from "@/state-management/auth";
 import MainLayout from "@/pages/MainLayout";
 import Home from "@/components/app/Home";
 import RedirectIfAuthenticated from "@/components/app/RedirectIfAuthenticated";
@@ -9,13 +8,12 @@ import ProtectedRoute from "@/components/app/ProtectedRoute";
 import PageNotFound from "@/pages/PageNotFound";
 
 function AppRoutes() {
-  const { user, isAuthenticated } = useAuth();
 
   const routes = useRoutes([
     {
       path: "/",
       element: (
-        <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
+        <ProtectedRoute>
           <MainLayout />
         </ProtectedRoute>
       ),
@@ -24,7 +22,7 @@ function AppRoutes() {
     {
       path: "/",
       element: (
-        <RedirectIfAuthenticated isAuthenticated={isAuthenticated} user={user}>
+        <RedirectIfAuthenticated>
           <Outlet />
         </RedirectIfAuthenticated>
       ),

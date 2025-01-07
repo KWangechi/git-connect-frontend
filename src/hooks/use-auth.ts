@@ -1,25 +1,14 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { api } from "@/utils/axios"; // Axios instance
 import { LoginCredentials, User } from "@/utils/types"; // Define your User type accordingly
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/components/context/AuthContext";
 
 function useAuth() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { setUser, setToken, setIsAuthenticated } = useContext(AuthContext);
 
   const navigate = useNavigate();
-
-  // Fetch user from localStorage on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    const isAuthenticated = localStorage.getItem("accessToken") ? true : false;
-
-    if (savedUser && isAuthenticated) {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
-    } 
-  }, []);
 
   // Login function
   const login = async (user: LoginCredentials) => {
@@ -31,8 +20,10 @@ function useAuth() {
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("user", JSON.stringify(data.data.user));
 
-        setIsAuthenticated(true);
         setUser(data.data.user);
+        setToken(data.data.accessToken);
+        setIsAuthenticated(true);
+
         alert("Success!");
         navigate("/");
       } else {
@@ -72,8 +63,8 @@ function useAuth() {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("user");
-        setIsAuthenticated(false);
         setUser(null);
+        setToken(null);
         navigate("/login");
       } else {
         alert(response.data.status.message);
@@ -83,7 +74,7 @@ function useAuth() {
     }
   };
 
-  return { user, isAuthenticated, loading, login, logout, registerUser };
+  return { loading, login, logout, registerUser };
 }
 
 export default useAuth;
