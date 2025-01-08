@@ -4,6 +4,8 @@ import { LoginCredentials } from "../../utils/types";
 import { useForm } from "react-hook-form";
 import useAuth from "@/hooks/use-auth";
 import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const LoginPage = () => {
   const {
@@ -14,7 +16,7 @@ const LoginPage = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
 
   const handleLogin = async (data: LoginCredentials) => {
     await login(data);
@@ -25,7 +27,11 @@ const LoginPage = () => {
       <div className="w-full max-w-xl p-8 bg-gray-900 rounded-2xl">
         <div className="">
           <div className="flex items-center justify-center">
-            <img src="/git_connect_logo.png" alt="Git Connect" className="h-8 w-auto" />
+            <img
+              src="/git_connect_logo.png"
+              alt="Git Connect"
+              className="h-8 w-auto"
+            />
           </div>
         </div>
         {/* Page Title */}
@@ -77,12 +83,16 @@ const LoginPage = () => {
 
           {/* Login Button */}
           <div className="flex justify-center">
-            <button
+            <Button
               type="submit"
-              className="w-36 py-2 px-4 bg-yellow-400 text-gray-900 font-semibold hover:bg-gray-300 focus:ring-2 focus:ring-yellow-500 focus:outline-none transition"
+              className="w-36 py-2 px-4 bg-yellow-400 text-gray-900 font-semibold hover:bg-gray-300 focus:ring-2 focus:ring-yellow-500 focus:outline-none transition rounded"
             >
-              Login
-            </button>
+              {loading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <span className="text-lg text-gray-900">Login</span>
+              )}
+            </Button>
           </div>
         </form>
 

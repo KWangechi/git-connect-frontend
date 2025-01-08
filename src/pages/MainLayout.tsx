@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/app/nav/Sidebar";
-import { Toaster } from "@/components/ui/toaster";
 import { Navbar } from "@/components/app/nav/Navbar";
 
 const MainLayout = () => {
@@ -18,8 +17,6 @@ const MainLayout = () => {
           <Outlet />
         </div>
       </main>
-
-      <Toaster></Toaster>
     </section>
   );
 };

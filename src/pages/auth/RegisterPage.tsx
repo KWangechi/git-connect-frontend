@@ -4,9 +4,11 @@ import { User } from "../../utils/types";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import useAuth from "@/hooks/use-auth";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 const Register = () => {
-  const { registerUser } = useAuth();
+  const { registerUser, loading } = useAuth();
   const {
     register,
     handleSubmit,
@@ -52,7 +54,7 @@ const Register = () => {
               id="firstname"
               className="mt-1 block w-full p-2 bg-gray-700 border border-gray-600 rounded shadow-sm"
               placeholder="Enter your firstname"
-              required
+              
             />
             <p className="text-red-500 pt-1">{errors.firstName?.message}</p>
           </div>
@@ -156,12 +158,16 @@ const Register = () => {
 
           {/* Login Button */}
           <div className="flex justify-center">
-            <button
+            <Button
               type="submit"
-              className="w-36 py-2 px-4 bg-yellow-400 text-gray-900 font-semibold hover:bg-gray-300 focus:ring-2 focus:ring-yellow-500 focus:outline-none transition"
+              className="w-36 py-2 px-4 bg-yellow-400 text-gray-900 font-semibold hover:bg-gray-300 focus:ring-2 focus:ring-yellow-500 focus:outline-none transition rounded"
             >
-              Create Account
-            </button>
+              {loading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                <span className="text-lg text-gray-900">Create Account</span>
+              )}
+            </Button>
           </div>
         </form>
 

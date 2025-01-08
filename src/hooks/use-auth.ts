@@ -17,6 +17,7 @@ function useAuth() {
     setLoading(true);
     try {
       const { data } = await api.post("/auth/login", user);
+      console.log(data);
       if (data.status.code === 200) {
         localStorage.setItem("accessToken", data.data.accessToken);
         localStorage.setItem("isAuthenticated", "true");
@@ -29,17 +30,20 @@ function useAuth() {
         toast({
           description: "Success",
         });
+        setLoading(false);
+
         navigate("/");
       } else {
         toast({
           description: data.status.message,
+          duration: 5000,
         });
       }
+      setLoading(false);
     } catch (error: unknown) {
       toast({
         description: error instanceof Error ? error.message : "Error Occurred",
       });
-      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -58,6 +62,7 @@ function useAuth() {
       } else {
         toast({
           description: data.status.message,
+          duration: 2000,
         });
 
         setLoading(false);
@@ -65,7 +70,9 @@ function useAuth() {
     } catch (error) {
       toast({
         description: error instanceof Error ? error.message : "Error Occurred",
+        duration: 2000,
       });
+
       setLoading(false);
     } finally {
       setLoading(false);
@@ -75,9 +82,14 @@ function useAuth() {
   // Logout function
   const logout = async () => {
     try {
-      const response = await api.post("/auth/logout");
-      if (response.data.status.code === 200) {
-        alert("Success!");
+      const { data } = await api.post("/auth/logout");
+      if (data.status.code === 200) {
+        toast({
+          description: "Success",
+          duration: 4000,
+          type: "foreground",
+          variant: "default",
+        });
         localStorage.removeItem("accessToken");
         localStorage.removeItem("isAuthenticated");
         localStorage.removeItem("user");
@@ -85,10 +97,12 @@ function useAuth() {
         setToken(null);
         navigate("/login");
       } else {
-        alert(response.data.status.message);
+        alert(data.status.message);
       }
     } catch (error) {
-      alert(error);
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+      });
     }
   };
 
