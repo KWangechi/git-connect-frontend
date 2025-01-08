@@ -16,7 +16,7 @@ export const Navbar = () => {
   const { logout } = useAuth();
 
   return (
-    <nav className="h-12 bg-gray-800 text-white px-4 flex justify-end items-center">
+    <nav className="h-12 bg-[#0e0c0cec] text-white px-4 flex justify-end items-center border-b z-50 border-b-slate-600">
       <div className="flex items-center gap-x-4">
         <div>
           <HelpCircleIcon size={20} className="rounded hover:bg-gray-200" />

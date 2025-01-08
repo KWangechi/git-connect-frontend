@@ -15,7 +15,7 @@ function Sidebar() {
 
   return (
     <div
-      className={`bg-[#0e0e0e] min-h-screen ${
+      className={`bg-[#0e0c0cec] min-h-screen mt-12 ${
         isMobile
           ? open
             ? "w-72" // Full width on mobile when open

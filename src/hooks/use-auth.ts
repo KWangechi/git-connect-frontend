@@ -67,7 +67,7 @@ function useAuth() {
 
         setLoading(false);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       toast({
         description: error instanceof Error ? error.message : "Error Occurred",
         duration: 2000,

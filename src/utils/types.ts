@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export interface User {
   firstName: string;
   lastName: string;
@@ -13,10 +15,10 @@ export interface LoginCredentials {
 }
 
 export interface UserProfile {
-  userId: number;
+  id: string;
   occupation: string;
   phoneNumber: string;
-  photoUrl?: string;
+  photoUrl: string;
   dateOfBirth?: Date;
   location?: string;
   education?: {
@@ -35,10 +37,12 @@ export interface UserProfile {
     stillWorkingHere?: boolean;
     location?: string;
   }>;
-  yearsOfExperience?: number;
-  twitterLink?: string;
-  githubLink?: string;
-  websiteLink?: string;
+  yearsOfExperience: number;
+  socialLinks?: {
+    twitterLink?: string;
+    githubLink?: string;
+    websiteLink?: string;
+  };
 }
 
 export interface Post {
@@ -46,4 +50,18 @@ export interface Post {
   content: string;
   //   userId: number | string;
   //   createdBy: number | string;
+}
+
+export interface ProfileCardProps {
+  profile: string | null;
+}
+
+export interface SearchProps {
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+}
+
+export interface Developer extends User {
+  id: string;
+  profile?: UserProfile;
 }
