@@ -3,12 +3,14 @@ import { api } from "@/utils/axios"; // Axios instance
 import { LoginCredentials, User } from "@/utils/types"; // Define your User type accordingly
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/components/context/AuthContext";
+import { useToast } from "./use-toast";
 
 function useAuth() {
   const [loading, setLoading] = useState<boolean>(false);
   const { setUser, setToken, setIsAuthenticated } = useContext(AuthContext);
 
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   // Login function
   const login = async (user: LoginCredentials) => {
@@ -24,13 +26,20 @@ function useAuth() {
         setToken(data.data.accessToken);
         setIsAuthenticated(true);
 
-        alert("Success!");
+        toast({
+          description: "Success",
+        });
         navigate("/");
       } else {
-        alert(data.status.message);
+        toast({
+          description: data.status.message,
+        });
       }
-    } catch (error) {
-      alert(error || "An error occurred");
+    } catch (error: unknown) {
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+      });
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -42,13 +51,22 @@ function useAuth() {
     try {
       const { data } = await api.post("/auth/register", newUser);
       if (data.status.code === 201) {
-        alert("Registration successful!");
+        toast({
+          description: "Success",
+        });
         navigate("/login");
       } else {
-        alert(data.status.message);
+        toast({
+          description: data.status.message,
+        });
+
+        setLoading(false);
       }
     } catch (error) {
-      alert(error || "An error occurred");
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+      });
+      setLoading(false);
     } finally {
       setLoading(false);
     }

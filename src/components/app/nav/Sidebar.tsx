@@ -1,37 +1,44 @@
 import { Home, Contact, Bookmark, MenuIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 function Sidebar() {
   const menuItems = [
     { label: "My Feed", icon: <Home size={20} />, path: "/posts" },
     { label: "Developers", icon: <Contact size={20} />, path: "/developers" },
     { label: "Login", icon: <Bookmark size={20} />, path: "login" },
-    // { label: "Messages", icon: <MessageSquare size={20} /> },
-    // { label: "Notifications", icon: <Bell size={20} /> },
-    // { label: "Settings", icon: <Settings size={20} /> },
   ];
 
   const [open, setOpen] = useState(true);
+  const isMobile = useIsMobile();
 
   return (
     <div
       className={`bg-[#0e0e0e] min-h-screen ${
-        open ? "w-72" : "w-20"
-      } duration-500 text-gray-100 px-4`}
+        isMobile
+          ? open
+            ? "w-72" // Full width on mobile when open
+            : "hidden" // Completely hide on mobile when closed
+          : open
+          ? "w-72" // Desktop width when open
+          : "w-20" // Compact width when closed
+      } duration-500 text-gray-100 px-4 fixed sm:relative z-50`}
     >
       {/* Top Section */}
       <div>
         {/* Logo Section */}
-        <div className="flex justify-between p-4 border-b border-gray-700">
-          <div className="flex items-center">
+        <div className="flex justify-between pt-3 pb-2 border-b border-gray-700 items-center">
+          <div className={`flex items-center ${!open ? "hidden" : "visible"}`}>
             <img
               src="/git_connect_logo.png"
               alt="Git Connect"
-              className="h-8 w-auto"
+              className="h-6"
             />
+            <h1 className={`text-lg font-bold text-yellow-500 `}>
+              Git Connect
+            </h1>
           </div>
-          <h1 className="text-lg font-bold text-yellow-500">Git Connect</h1>
           <div className="flex justify-end items-center">
             <MenuIcon
               size={26}
@@ -47,7 +54,7 @@ function Sidebar() {
             <li key={index} className="group">
               <Link
                 to={item.path}
-                className="flex items-center px-4 py-3 hover:bg-gray-700 rounded-md text-white transition"
+                className="flex items-center px-4 py-2 text-sm hover:bg-gray-700 rounded-md text-white transition"
               >
                 <div className="mr-3 text-gray-400 group-hover:text-yellow-500">
                   {item.icon}
