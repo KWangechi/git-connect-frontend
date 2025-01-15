@@ -12,16 +12,13 @@ import useDeveloper from "@/hooks/useDeveloper";
 
 const Home = () => {
   const [search, setSearchTerm] = useState<string>("");
+  const {developers} = useDeveloper();
 
-  const { getDevelopers, developers } = useDeveloper();
+  useDeveloper();
 
-  useEffect(() => {
-    getDevelopers();
-  }, []);
-
+  
   return (
     <div className="p-4">
-      {search}
       <div className="w-80 mb-8">
         <div className="text-bold font-semibold text-3xl">
           <span>Developers</span>
@@ -31,7 +28,7 @@ const Home = () => {
       </div>
       <div className="grid grid-cols-4 sm:grid-cols-2 md:grid-cols-5 gap-x-8  gap-y-8">
         {developers.map((user) => (
-          <Card key={user.id} className="hover:shadow-lg transition-shadow">
+          <Card key={user.id} className="hover:shadow-lg transition-shadow hover:cursor-pointer">
             <CardHeader>
               <img
                 src={user?.profile?.photoUrl}

@@ -10,34 +10,26 @@ function Sidebar() {
     { label: "Login", icon: <Bookmark size={20} />, path: "login" },
   ];
 
-  const [open, setOpen] = useState(true);
   const isMobile = useIsMobile();
+  const [open, setOpen] = useState(isMobile ? false : true);
 
   return (
     <div
-      className={`bg-[#0e0c0cec] min-h-screen mt-12 ${
-        isMobile
-          ? open
-            ? "w-72" // Full width on mobile when open
-            : "hidden" // Completely hide on mobile when closed
-          : open
-          ? "w-72" // Desktop width when open
-          : "w-20" // Compact width when closed
+      className={`bg-[#22331D] min-h-screen ${
+        isMobile ? (open ? "w-72" : "hidden") : open ? "w-72" : "w-16"
       } duration-500 text-gray-100 px-4 fixed sm:relative z-50`}
     >
       {/* Top Section */}
       <div>
         {/* Logo Section */}
-        <div className="flex justify-between pt-3 pb-2 border-b border-gray-700 items-center">
-          <div className={`flex items-center ${!open ? "hidden" : "visible"}`}>
+        <div className="flex justify-between pt-3 pb-2 items-center">
+          <div className={`flex items-center ${!open ? "hidden" : "visible"} gap-x-4`}>
             <img
               src="/git_connect_logo.png"
               alt="Git Connect"
               className="h-6"
             />
-            <h1 className={`text-lg font-bold text-yellow-500 `}>
-              Git Connect
-            </h1>
+            <h1 className={`text-lg font-semibold text-white`}>Git Connect</h1>
           </div>
           <div className="flex justify-end items-center">
             <MenuIcon
@@ -49,12 +41,12 @@ function Sidebar() {
         </div>
 
         {/* Menu Items */}
-        <ul className="mt-4 flex flex-col gap-4 relative">
+        <ul className="mt-4 flex flex-col gap-3">
           {menuItems.map((item, index) => (
             <li key={index} className="group">
               <Link
                 to={item.path}
-                className="flex items-center px-4 py-2 text-sm hover:bg-gray-700 rounded-md text-white transition"
+                className="flex items-center py-2 text-sm hover:bg-gray-700 rounded-md text-white transition"
               >
                 <div className="mr-3 text-gray-400 group-hover:text-yellow-500">
                   {item.icon}

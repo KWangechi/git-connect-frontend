@@ -16,18 +16,18 @@ export const Navbar = () => {
   const { logout } = useAuth();
 
   return (
-    <nav className="h-12 bg-[#0e0c0cec] text-white px-4 flex justify-end items-center border-b z-50 border-b-slate-600">
-      <div className="flex items-center gap-x-4">
-        <div>
-          <HelpCircleIcon size={20} className="rounded hover:bg-gray-200" />
+    <nav className="h-14 bg-white text-black px-4 flex justify-end items-center border-b z-50 shadow-md">
+      <div className="flex items-center gap-x-4 cursor-pointer">
+        <div className="bg-gray-300 text-gray-700 rounded px-1 py-1 hover:bg-gray-200">
+          <HelpCircleIcon size={18} />
         </div>
 
-        <div>
-          <LucideBell size={20} className="rounded hover:bg-gray-200" />
+        <div className="bg-gray-300 text-gray-700 rounded px-1 py-1 hover:bg-gray-200">
+          <LucideBell size={18} />
         </div>
 
         <div
-          className="flex items-center gap-x-2 ml-12 mr-4 cursor-pointer hover:text-gray-600"
+          className="flex items-center gap-x-2 ml-6 mr-4 cursor-pointer hover:text-gray-600"
           onClick={() => setOpenMenu((prev) => !prev)}
         >
           <UserCircle2 size={20} className="rounded hover:bg-gray-200" />

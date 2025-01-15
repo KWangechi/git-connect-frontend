@@ -6,9 +6,9 @@ import LoginPage from "@/pages/auth/LoginPage";
 import Register from "@/pages/auth/RegisterPage";
 import ProtectedRoute from "@/components/app/ProtectedRoute";
 import PageNotFound from "@/pages/PageNotFound";
+import UserProfileForm from "@/components/app/user-profile/UserProfileForm";
 
 function AppRoutes() {
-
   const routes = useRoutes([
     {
       path: "/",
@@ -17,8 +17,16 @@ function AppRoutes() {
           <MainLayout />
         </ProtectedRoute>
       ),
-      children: [{ path: "", element: <Home /> }],
+      children: [
+        { path: "", element: <Home /> },
+        // Add more routes here
+        // Example: { path: "developers", element: <DevelopersPage /> },
+        // Example: { path: "posts", element: <PostsPage /> },
+        // Example: { path: "settings", element: <SettingsPage /> },
+      ],
     },
+    { path: "profile/:username/create", element: <UserProfileForm /> },
+
     {
       path: "/",
       element: (

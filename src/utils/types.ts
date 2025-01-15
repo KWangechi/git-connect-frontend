@@ -1,24 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 
-export interface User {
-  firstName: string;
-  lastName: string;
-  username: string;
-  emailAddress: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface LoginCredentials {
-  emailAddress: string;
-  password: string;
-}
-
 export interface UserProfile {
   id: string;
   occupation: string;
   phoneNumber: string;
-  photoUrl: string;
+  photo: object;
   dateOfBirth?: Date;
   location?: string;
   education?: {
@@ -29,7 +15,7 @@ export interface UserProfile {
     institution: string;
     location: string;
   };
-  workExperience: Array<{
+  workExperience?: Array<{
     jobTitle?: string;
     company?: string;
     startDate?: Date;
@@ -44,6 +30,22 @@ export interface UserProfile {
     websiteLink?: string;
   };
 }
+export interface User {
+  firstName: string;
+  lastName: string;
+  username: string;
+  emailAddress: string;
+  password: string;
+  confirmPassword: string;
+  profile?: UserProfile;
+}
+
+export interface LoginCredentials {
+  emailAddress: string;
+  password: string;
+}
+
+
 
 export interface Post {
   title: string;

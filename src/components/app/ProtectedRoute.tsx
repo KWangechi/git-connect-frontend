@@ -5,8 +5,12 @@ import { AuthContext } from "../context/AuthContext";
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isAuthenticated } = useContext(AuthContext);
 
+  const userHasProfile = user?.profile;
+
   return isAuthenticated && user ? (
-    <>{children}</>
+    <>
+      {userHasProfile ? children : <Navigate to={`profile/${user.username}/create`} />}
+    </>
   ) : (
     <Navigate to="login" replace />
   );

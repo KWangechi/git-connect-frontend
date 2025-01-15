@@ -82,7 +82,7 @@ function useAuth() {
   // Logout function
   const logout = async () => {
     try {
-      const { data } = await api.post("/auth/logout");
+      const { data } = await api.get("/auth/logout");
       if (data.status.code === 200) {
         toast({
           description: "Success",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Developer } from "@/utils/types";
 import { api } from "@/utils/axios";
 import { useToast } from "./use-toast";
@@ -29,6 +29,11 @@ function useDeveloper() {
       });
     }
   };
+
+  // fetch developers when this hook is called the first time
+  useEffect(() => {
+    getDevelopers();
+  }, []);
 
   const fetchUserProfile = async (username: string) => {
     setLoading(true);
