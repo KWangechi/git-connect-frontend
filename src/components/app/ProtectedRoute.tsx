@@ -7,6 +7,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   const userHasProfile = user?.profile;
 
+  console.log("User has profile: " + userHasProfile);
+
   return isAuthenticated && user ? (
     <>
       {userHasProfile ? children : <Navigate to={`profile/${user.username}/create`} />}

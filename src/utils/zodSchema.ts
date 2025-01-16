@@ -30,11 +30,12 @@ export const userProfileSchema = z
   .object({
     occupation: z.string(),
     phoneNumber: z.string(),
-    photo: z.instanceof(File, {
+    profilePhoto: z.instanceof(File, {
       message: "Please Upload a Photo",
     }),
-    dateOfBirth: z.string().date().optional(),
+    dateOfBirth: z.coerce.date().optional(),
     location: z.string().optional(),
+    // yearsOfExperience: z.coerce.number().optional(),
     education: z
       .object({
         degree: z.string().optional(),
@@ -50,8 +51,9 @@ export const userProfileSchema = z
         .object({
           jobTitle: z.string().optional(),
           company: z.string().optional(),
-          startDate: z.string().date().optional(),
-          endDate: z.string().date().optional(),
+          startDate: z.coerce.date().optional(),
+          endDate: z.coerce.date().optional(),
+          stillWorkingHere: z.boolean().optional(),
           //   achievements: z.array(z.string()),
           //   responsibilities: z.array(z.string()),
           location: z.string().optional(),
@@ -89,7 +91,7 @@ export const userProfileSchema = z
     //   skills: z.array(z.string()),
   })
   .superRefine((data, ctx) => {
-    const photo = data.photo;
+    const photo = data.profilePhoto;
 
     if (photo.size > MAX_FILE_SIZE) {
       ctx.addIssue({

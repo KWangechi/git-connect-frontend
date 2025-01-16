@@ -10,30 +10,28 @@ function useDeveloper() {
 
   const { toast } = useToast();
 
-  const getDevelopers = async () => {
-    try {
-      setLoading(true);
-
-      // Simulating delay for demonstration purposes
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      const { data } = await api.get("/developers");
-
-      if (data.status.code === 200) {
-        setDevelopers(data.data);
-        setDeveloper(data.data[0]);
-      }
-    } catch (error: unknown) {
-      toast({
-        description: error instanceof Error ? error.message : "Error Occurred",
-        duration: 2000,
-      });
-    }
-  };
-
-  // fetch developers when this hook is called the first time
   useEffect(() => {
+    const getDevelopers = async () => {
+      try {
+        setLoading(true);
+
+        const { data } = await api.get("/developers");
+
+        if (data.status.code === 200) {
+          setDevelopers(data.data);
+          setDeveloper(data.data[0]);
+        }
+      } catch (error: unknown) {
+        toast({
+          description:
+            error instanceof Error ? error.message : "Error Occurred",
+          duration: 2000,
+        });
+      }
+    };
+
     getDevelopers();
-  }, []);
+  }, [toast]);
 
   const fetchUserProfile = async (username: string) => {
     setLoading(true);
@@ -111,7 +109,6 @@ function useDeveloper() {
   };
 
   return {
-    getDevelopers,
     developers,
     developer,
     loading,

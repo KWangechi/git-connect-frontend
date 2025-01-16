@@ -8,8 +8,17 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [token, setToken] = useState<string | null>("");
 
-  // Fetch user from localStorage on mount
+  /**
+   * Fetch user from localStorage on mount but first check if the user exists
+   * and if user has already been set, return early and update the localStorage
+   */
   useEffect(() => {
+    if (user) {
+      // If user exists, update localStorage and return early to avoid unnecessary re-renders
+      localStorage.setItem("user", JSON.stringify(user));
+      return;
+    }
+
     const savedUser = localStorage.getItem("user");
     const hasToken = localStorage.getItem("accessToken") ? true : false;
 
@@ -19,7 +28,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     setLoading(false);
-  }, []);
+  }, [user]);
 
   if (loading) {
     // Show a fallback (like a spinner) while checking authentication
