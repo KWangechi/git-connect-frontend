@@ -1,6 +1,6 @@
-import { Home, Contact, Bookmark, MenuIcon } from "lucide-react";
+import { Home, Contact, Bookmark, MenuIcon, XIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 function Sidebar() {
@@ -13,17 +13,29 @@ function Sidebar() {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(isMobile ? false : true);
 
+  useEffect(() => {
+    if (isMobile) {
+      setOpen(false); // Close the sidebar by default on mobile
+    } else {
+      setOpen(true); // Open the sidebar by default on larger screens
+    }
+  }, [isMobile]);
+
   return (
     <div
       className={`bg-[#22331D] min-h-screen ${
-        isMobile ? (open ? "w-72" : "hidden") : open ? "w-72" : "w-16"
+        isMobile ? (open ? "w-60" : "hidden") : open ? "w-72" : "w-16"
       } duration-500 text-gray-100 px-4 fixed sm:relative z-50`}
     >
       {/* Top Section */}
       <div>
         {/* Logo Section */}
         <div className="flex justify-between pt-3 pb-2 items-center">
-          <div className={`flex items-center ${!open ? "hidden" : "visible"} gap-x-4`}>
+          <div
+            className={`flex items-center ${
+              !open ? "hidden" : "visible"
+            } gap-x-4`}
+          >
             <img
               src="/git_connect_logo.png"
               alt="Git Connect"
@@ -32,11 +44,19 @@ function Sidebar() {
             <h1 className={`text-lg font-semibold text-white`}>Git Connect</h1>
           </div>
           <div className="flex justify-end items-center">
-            <MenuIcon
-              size={26}
-              className="rounded-md cursor-pointer "
-              onClick={() => setOpen(!open)}
-            ></MenuIcon>
+            {!open ? (
+              <MenuIcon
+                size={24}
+                className="rounded-md cursor-pointer "
+                onClick={() => setOpen(true)}
+              ></MenuIcon>
+            ) : (
+              <XIcon
+                size={24}
+                className="rounded-md cursor-pointer "
+                onClick={() => setOpen(false)}
+              ></XIcon>
+            )}
           </div>
         </div>
 

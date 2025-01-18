@@ -13,8 +13,8 @@ const MainLayout = () => {
       <div className="fixed top-0 left-0 w-full h-16 z-10">
         <Navbar />
       </div>
-      <main className="overflow-y-auto">
-        <div className="pt-14 px-4 ">
+      <main className="overflow-y-auto w-full">
+        <div className="pt-14 px-4">
           <Outlet />
         </div>
       </main>

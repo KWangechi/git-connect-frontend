@@ -1,33 +1,36 @@
 import { Dispatch, SetStateAction } from "react";
 
 export interface UserProfile {
-  id?: string; // Add an optional ID field if needed.
-  occupation: string; // Required string.
-  phoneNumber: string; // Required string.
-  profilePhoto: File; // Should match `z.instanceof(File)` from the schema.
+  id?: string;
+  occupation: string;
+  phoneNumber: string;
+  profilePhoto: File;
   photoUrl: string;
-  dateOfBirth?: Date; // Optional date.
-  location?: string; // Optional string.
+  dateOfBirth?: Date;
+  location?: string;
   education?: {
-    degree?: string; // Optional string.
-    major?: string; // Optional string.
-    graduationYear?: number; // Optional integer.
-    stillInSchool?: boolean; // Optional boolean.
-    institution?: string; // Optional string.
-    location?: string; // Optional string.
+    degree?: string;
+    major?: string;
+    graduationYear?: number;
+    stillInSchool?: boolean;
+    institution?: string;
+    location?: string;
   };
-  workExperience?: Array<{
-    jobTitle?: string; // Optional string.
-    company?: string; // Optional string.
-    startDate?: Date; // Optional date.
-    endDate?: Date; // Optional date.
-    stillWorkingHere?: boolean; // Optional boolean.
-    location?: string; // Optional string.
-  } | undefined>;
+  workExperience?: Array<
+    | {
+        jobTitle?: string;
+        company?: string;
+        startDate?: Date;
+        endDate?: Date;
+        stillWorkingHere?: boolean;
+        location?: string;
+      }
+    | undefined
+  >;
   socialLinks?: {
-    websiteLink?: string; // Optional string matching `url` format and starting with `https://`.
-    twitterLink?: string; // Optional string matching `url` format and starting with `https://x.com/`.
-    githubLink: string; // Required string matching `url` format and starting with `https://github.com/`.
+    websiteLink?: string;
+    twitterLink?: string;
+    githubLink: string;
   };
 }
 
@@ -45,8 +48,6 @@ export interface LoginCredentials {
   emailAddress: string;
   password: string;
 }
-
-
 
 export interface Post {
   title: string;
