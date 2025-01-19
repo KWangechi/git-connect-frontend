@@ -6,7 +6,8 @@ import { FaXTwitter } from "react-icons/fa6";
 import {
   Card,
   CardContent,
-  CardDescription,
+  // CardDescription,
+  // CardHeader,
   // CardFooter,
   CardTitle,
   // CardDescription,
@@ -32,64 +33,76 @@ const Home = () => {
         <Search searchTerm={search} setSearchTerm={setSearchTerm} />
         {/* <ProfileCard profile="Profile 1" /> */}
       </div>
-      <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6 mt-12">
         {developers.map((user, id) => (
           <Card
             key={id}
-            className="hover:shadow transition-shadow w-full text-wrap shadow-xl"
+            className="hover:shadow transition-shadow w-full text-wrap shadow-xl rounded-xl border border-gray-200 bg-white"
           >
-            <CardContent className="flex mt-4">
-              <div className="flex justify-start text-bold">
-                <img
-                  src={`${appUrl}${user.profile?.photoUrl}`}
-                  className="h-12 w-12 rounded-full object-cover"
-                />
-
-                <div className="ml-4">
-                  <CardTitle className="font-bold">{user?.username}</CardTitle>
-                  <CardDescription className="mt-1.5">
-                    {user.profile?.occupation}
-                  </CardDescription>
-                </div>
+            {/* Profile Image and Basic Info */}
+            <CardContent className="flex flex-col items-center -mt-8 rounded-md">
+              <img
+                src={`${appUrl}${user.profile?.photoUrl}`}
+                className="h-24 w-24 rounded-full object-cover border-4 border-white shadow-md"
+                alt={user?.username}
+              />
+              <div className="text-center mt-3">
+                <CardTitle className="text-lg font-semibold">
+                  {user?.username}
+                </CardTitle>
+                {/* <CardDescription className="text-gray-600 text-sm flex items-center justify-center gap-2 mt-1">
+                  <MailIcon size="16" />
+                  {user?.email || "Not Available"}
+                </CardDescription> */}
+                <span className="inline-block bg-gray-100 text-gray-600 text-xs px-3 py-1 mt-2 rounded-full">
+                  {user.profile?.occupation || "No Occupation"}
+                </span>
               </div>
             </CardContent>
-            <hr className="border-b-black w-full" />
-            <CardContent className="flex flex-col text-black m-3 rounded justify-start gap-y-4 ">
+
+            {/* Social Links Section */}
+            <CardContent className="flex flex-col text-gray-700 px-6 pb-4 gap-y-3">
               {user?.profile?.socialLinks?.websiteLink && (
                 <div className="flex items-center gap-x-2">
-                  <MapPinIcon size={"16px"}></MapPinIcon>
-                  <span>{user?.profile?.socialLinks?.websiteLink}</span>
+                  <MapPinIcon size={"16px"} />
+                  <span className="truncate">
+                    {user?.profile?.socialLinks?.websiteLink}
+                  </span>
                 </div>
               )}
 
               {user?.profile?.socialLinks?.twitterLink && (
                 <div className="flex items-center gap-x-2">
-                  <FaXTwitter size={"16px"}></FaXTwitter>
-                  <span>{user?.profile?.socialLinks?.twitterLink}</span>
+                  <FaXTwitter size={"16px"} className="text-blue-400" />
+                  <span className="truncate">
+                    {user?.profile?.socialLinks?.twitterLink}
+                  </span>
                 </div>
               )}
 
-              {user.profile?.socialLinks?.githubLink && (
+              {user?.profile?.socialLinks?.githubLink && (
                 <div className="flex items-center gap-x-2">
-                  <FaGithub size={"16px"}></FaGithub>
-                  <span>{user?.profile?.socialLinks?.githubLink}</span>
+                  <FaGithub size={"16px"} className="text-gray-800" />
+                  <span className="truncate">
+                    {user?.profile?.socialLinks?.githubLink}
+                  </span>
                 </div>
               )}
 
-              {user && (
+              {user?.profile?.location && (
                 <div className="flex items-center gap-x-2">
-                  <MapPinIcon size={"16px"} opacity={0.4}></MapPinIcon>
-                  <span>{user?.profile?.location} </span>
+                  <MapPinIcon size={"16px"} className="text-gray-500" />
+                  <span>{user?.profile?.location}</span>
                 </div>
               )}
             </CardContent>
 
-            <div className="flex justify-end text-[#69cf49] pr-4 pb-2">
+            {/* Footer Section */}
+            <div className="flex justify-end text-green-500 pr-4 pb-4">
               <Link to={"/"}>
                 <span className="underline">View More</span>
               </Link>
             </div>
-            {/* <CardFooter className=""></CardFooter> */}
           </Card>
         ))}
       </div>

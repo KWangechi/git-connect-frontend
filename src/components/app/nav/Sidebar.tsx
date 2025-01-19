@@ -1,13 +1,12 @@
-import { Home, Contact, Bookmark, MenuIcon, XIcon } from "lucide-react";
+import { Home, Contact, MenuIcon, XIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 function Sidebar() {
   const menuItems = [
-    { label: "My Feed", icon: <Home size={20} />, path: "/posts" },
+    { label: "Feed", icon: <Home size={20} />, path: "/posts" },
     { label: "Developers", icon: <Contact size={20} />, path: "/developers" },
-    { label: "Login", icon: <Bookmark size={20} />, path: "login" },
   ];
 
   const isMobile = useIsMobile();
@@ -66,7 +65,7 @@ function Sidebar() {
             <li key={index} className="group">
               <Link
                 to={item.path}
-                className="flex items-center py-2 text-sm hover:bg-gray-700 rounded-md text-white transition"
+                className="flex items-center py-2 text-sm hover:bg-gray-700 rounded hover:px-2 text-white transition active "
               >
                 <div className="mr-3 text-gray-400 group-hover:text-yellow-500">
                   {item.icon}
