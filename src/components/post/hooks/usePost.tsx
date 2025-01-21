@@ -11,28 +11,27 @@ function usePost() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const getPosts = async () => {
-      try {
-        setLoading(true);
-
-        const { data } = await api.get("/posts");
-
-        if (data.status.code === 200) {
-          setPosts(data.data);
-          setLoading(false);
-        }
-      } catch (error: unknown) {
-        toast({
-          description:
-            error instanceof Error ? error.message : "Error Occurred",
-          duration: 2000,
-        });
-        setLoading(false);
-      }
-    };
-
     getPosts();
   }, []);
+
+  const getPosts = async () => {
+    try {
+      setLoading(true);
+
+      const { data } = await api.get("/posts");
+
+      if (data.status.code === 200) {
+        setPosts(data.data);
+        setLoading(false);
+      }
+    } catch (error: unknown) {
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+        duration: 2000,
+      });
+      setLoading(false);
+    }
+  };
 
   const fetchPost = async (postId: string) => {
     setLoading(true);
@@ -42,6 +41,7 @@ function usePost() {
       if (data.status.code === 200) {
         setPost(data.data);
         setLoading(false);
+        await getPosts();
       } else {
         toast({
           description: data.status.message ?? "Error Occurred",
@@ -68,8 +68,8 @@ function usePost() {
           description: data.status.message,
           duration: 2000,
         });
-        setPosts(data.data);
         setLoading(false);
+        await getPosts();
       } else {
         toast({
           description: data.status.message ?? "Error Occurred",
@@ -90,7 +90,7 @@ function usePost() {
     setLoading(true);
     try {
       const { data } = await api.put(
-        `/developers/${username}/posts/${updatedPost?.id}`,
+        `/developers/${username}/posts/${updatedPost?._id}`,
         updatedPost
       );
       if (data.status.code === 200) {

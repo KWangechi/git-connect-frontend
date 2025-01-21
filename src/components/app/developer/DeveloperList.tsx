@@ -19,22 +19,6 @@ const DevelopersList = () => {
 
   const { developers, loading: listLoading, searchDeveloper } = useDeveloper();
 
-  // the image Url is like a GET request
-  // useEffect(() => {
-  //  function getImageUrl() {
-  //    // Here you can make a GET request to fetch the image URL
-  //    // The response will be a string that represents the URL of the image
-  //    // For example: "https://example.com/image.jpg"
-  //    // Once you have the URL, you can update the user.profile?.photoUrl with the fetched URL
-  //    // For demonstration purposes, let's assume we've fetched the URL from a mock API
-  //    fetch('https://api.example.com/image-url')
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       user.profile?.photoUrl = data.imageUrl;
-  //     });
-  //  }
-  // }, []);
-
   useEffect(() => {
     searchDeveloper(search);
   }, [search]);

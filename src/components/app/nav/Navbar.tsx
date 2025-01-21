@@ -1,5 +1,6 @@
 import { AuthContext } from "@/components/context/AuthContext";
 import useAuth from "@/hooks/use-auth";
+import { appUrl } from "@/utils/axios";
 import {
   HelpCircleIcon,
   LogOut,
@@ -30,7 +31,18 @@ export const Navbar = () => {
           className="flex items-center gap-x-2 ml-6 mr-4 cursor-pointer hover:text-gray-600"
           onClick={() => setOpenMenu((prev) => !prev)}
         >
-          <UserCircle2 size={20} className="rounded hover:bg-gray-200" />
+          {user?.profile?.photoUrl ? (
+            <img
+              src={
+                `${appUrl}${user.profile?.photoUrl}` ||
+                "https://imebehavioralhealth.com/wp-content/uploads/2021/10/user-icon-placeholder-1.png"
+              }
+              className="h-10 w-10 rounded-full object-cover border-4 border-white shadow-md"
+              // alt={user?.username}
+            />
+          ) : (
+            <UserCircle2 size={20} className="rounded hover:bg-gray-200" />
+          )}
           <span className="text-gray-400 ">{user?.username}</span>
         </div>
 
