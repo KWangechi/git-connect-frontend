@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Developer } from "@/utils/types";
+import { useMemo, useState } from "react";
+import { Developer, Post } from "@/utils/types";
 import { api } from "@/utils/axios";
 import { useToast } from "./use-toast";
 
@@ -7,10 +7,11 @@ function useDeveloper() {
   const [developers, setDevelopers] = useState<Developer[] | []>([]);
   const [developer, setDeveloper] = useState<Developer | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [userPosts, setUserPosts] = useState<Partial<Post[]> | []>([]);
 
   const { toast } = useToast();
 
-  useEffect(() => {
+  useMemo(() => {
     const getDevelopers = async () => {
       try {
         setLoading(true);
@@ -19,7 +20,6 @@ function useDeveloper() {
 
         if (data.status.code === 200) {
           setDevelopers(data.data);
-          setDeveloper(data.data[0]);
         }
       } catch (error: unknown) {
         toast({
@@ -28,6 +28,7 @@ function useDeveloper() {
           duration: 2000,
         });
       }
+      setLoading(false);
     };
 
     getDevelopers();
@@ -36,7 +37,7 @@ function useDeveloper() {
   const fetchUserProfile = async (username: string) => {
     setLoading(true);
     try {
-      const { data } = await api.get(`/${username}/profile`);
+      const { data } = await api.get(`/developers/${username}/profile`);
 
       if (data.status.code === 200) {
         setDeveloper(data.data);
@@ -108,13 +109,66 @@ function useDeveloper() {
     setLoading(false);
   };
 
+  const searchDeveloper = async (searchTerm: string) => {
+    setLoading(true);
+    try {
+      const { data } = await api.get(`/developers/search`, {
+        params: {
+          searchTerm,
+        },
+      });
+
+      if (data.status.code === 200) {
+        setDevelopers(data.data);
+      } else {
+        toast({
+          description: data.status.message ?? "Error Occurred",
+          duration: 2000,
+        });
+      }
+      setLoading(false);
+    } catch (error: unknown) {
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+        duration: 2000,
+      });
+    }
+  };
+
+  // fetch user posts
+  const fetchUserPosts = async (username: string) => {
+    setLoading(true);
+    try {
+      const { data } = await api.get(`/developers/${username}/posts`);
+      if (data.status.code === 200) {
+        setUserPosts(data.data);
+      } else {
+        toast({
+          description: data.status.message ?? "Error Occurred",
+          duration: 2000,
+        });
+      }
+      setLoading(false);
+    } catch (error: unknown) {
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+        duration: 2000,
+      });
+      setLoading(false);
+    }
+  };
+
   return {
     developers,
     developer,
     loading,
     fetchUserProfile,
+    searchDeveloper,
     updateUserProfile,
     deleteUserProfile,
+    // posts
+    fetchUserPosts,
+    userPosts,
   };
 }
 

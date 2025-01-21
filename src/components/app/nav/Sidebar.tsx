@@ -1,11 +1,11 @@
 import { Home, Contact, MenuIcon, XIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 function Sidebar() {
   const menuItems = [
-    { label: "Feed", icon: <Home size={20} />, path: "/posts" },
+    { label: "Feed", icon: <Home size={20} />, path: "/home" },
     { label: "Developers", icon: <Contact size={20} />, path: "/developers" },
   ];
 
@@ -63,9 +63,13 @@ function Sidebar() {
         <ul className="mt-4 flex flex-col gap-3">
           {menuItems.map((item, index) => (
             <li key={index} className="group">
-              <Link
+              <NavLink
                 to={item.path}
-                className="flex items-center py-2 text-sm hover:bg-gray-700 rounded hover:px-2 text-white transition active "
+                className={({ isActive }) =>
+                  `flex items-center py-2 px-2 text-sm hover:bg-gray-700 rounded hover:px-2 text-white transition ${
+                    isActive ? "bg-[#6a6d69] text-yellow-500" : ""
+                  }`
+                }
               >
                 <div className="mr-3 text-gray-400 group-hover:text-yellow-500">
                   {item.icon}
@@ -86,15 +90,15 @@ function Sidebar() {
                 >
                   {item?.label}
                 </span>
-              </Link>
+              </NavLink>
             </li>
           ))}
         </ul>
       </div>
 
       {/* Bottom Section: Dark Mode Toggle */}
-      {/* <div className="p-4 border-t border-gray-700">
-        <div className="flex items-center justify-between">
+      <div className="absolute bottom-0 p-4 border-t border-gray-700">
+        <div className="flex items-center gap-x-8">
           <span className="text-sm">Dark Theme</span>
           <label className="relative inline-flex items-center cursor-pointer">
             <input
@@ -107,7 +111,7 @@ function Sidebar() {
             </div>
           </label>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

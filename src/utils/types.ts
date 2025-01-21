@@ -50,10 +50,12 @@ export interface LoginCredentials {
 }
 
 export interface Post {
+  id?: string;
   title: string;
   content: string;
-  //   userId: number | string;
-  //   createdBy: number | string;
+  userId: number | string;
+  createdBy: number | string;
+  createdAt: Date;
 }
 
 export interface ProfileCardProps {
