@@ -54,7 +54,7 @@ export interface Post {
   title: string;
   content: string;
   userId: number | string;
-  createdBy: number | string;
+  createdBy: Developer;
   createdAt: Date;
 }
 

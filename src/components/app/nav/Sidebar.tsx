@@ -2,6 +2,7 @@ import { Home, Contact, MenuIcon, XIcon } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Switch } from "@/components/ui/switch";
 
 function Sidebar() {
   const menuItems = [
@@ -11,12 +12,13 @@ function Sidebar() {
 
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(isMobile ? false : true);
+  const [darkTheme, setDarkTheme] = useState<boolean>(false);
 
   useEffect(() => {
     if (isMobile) {
-      setOpen(false); // Close the sidebar by default on mobile
+      setOpen(false);
     } else {
-      setOpen(true); // Open the sidebar by default on larger screens
+      setOpen(true);
     }
   }, [isMobile]);
 
@@ -97,19 +99,15 @@ function Sidebar() {
       </div>
 
       {/* Bottom Section: Dark Mode Toggle */}
-      <div className="absolute bottom-0 p-4 border-t border-gray-700">
-        <div className="flex items-center gap-x-8">
-          <span className="text-sm">Dark Theme</span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              defaultChecked={true}
-            />
-            <div className="w-10 h-6 bg-gray-600 rounded-full peer peer-checked:bg-yellow-500 transition">
-              <div className="w-4 h-4 bg-white rounded-full shadow-md transform peer-checked:translate-x-4 transition-transform"></div>
-            </div>
-          </label>
+      <div className="absolute bottom-0 p-4 border-t">
+        <div className="flex items-center space-x-4 w-full">
+          <label htmlFor="dark_theme">Dark Theme</label>
+          <Switch
+            id="dark_theme"
+            checked={darkTheme}
+            onCheckedChange={setDarkTheme}
+            className="bg-white"
+          />
         </div>
       </div>
     </div>
