@@ -15,10 +15,9 @@ const ViewProfile = () => {
 
   useEffect(() => {
     if (username) {
-      console.log(username);
       fetchUserProfile(username);
     }
-  }, [username]);
+  }, []);
 
   if (!developer) {
     return <div>Loading...</div>;

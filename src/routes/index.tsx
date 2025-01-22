@@ -10,6 +10,8 @@ import UserProfileForm from "@/components/app/user-profile/UserProfileForm";
 import ViewProfile from "@/pages/userProfile/ViewProfile";
 import RedirectRoute from "@/components/app/RedirectRoute";
 import DevelopersList from "@/components/app/developer/DeveloperList";
+import Posts from "@/components/post/Posts";
+import ViewPost from "@/components/post/ViewPost";
 
 function AppRoutes() {
   const routes = useRoutes([
@@ -36,6 +38,21 @@ function AppRoutes() {
             {
               path: "profile/:username",
               element: <ViewProfile />,
+            },
+          ],
+        },
+
+        // Posts Routes
+        {
+          path: "/posts",
+          children: [
+            {
+              path: "",
+              element: <Posts />,
+            },
+            {
+              path: ":id",
+              element: <ViewPost/>,
             },
           ],
         },

@@ -1,8 +1,10 @@
 // import { Link } from "react-router-dom";
 // import { MdSend } from "react-icons/md";
+import { FaRegCommentDots } from "react-icons/fa6";
+import { BiLike } from "react-icons/bi";
 import {
   Card,
-  CardContent,
+  // CardContent,
   // CardDescription,
   // CardHeader,
   // CardFooter,
@@ -15,11 +17,15 @@ import usePost from "./hooks/usePost";
 // import { Button } from "../ui/button";
 // import { Post } from "@/utils/types";
 import { Loader2 } from "lucide-react";
+import { MdOpenInNew } from "react-icons/md";
 import { convertToDateString, formattedTime } from "@/utils/formateDate";
+import { useNavigate } from "react-router-dom";
 // import { appUrl } from "@/utils/axios";
 
 const Posts = () => {
-  const { posts, loading, createPost } = usePost();
+  const { posts, loading, toggleLikeStatus } = usePost();
+
+  const navigate = useNavigate();
 
   // get currently logged in user
   // const user = JSON.parse(localStorage.getItem("user"));
@@ -44,6 +50,14 @@ const Posts = () => {
   //   // if successful, clear the form
   //   setNewPost({ title: "", content: "" });
   // };
+
+  const handleClick = (postId: string | undefined) => {
+    navigate(`/posts/${postId}`);
+  };
+
+  const handleLike = (postId: string | undefined) => {
+    toggleLikeStatus(postId);
+  };
 
   return (
     <div className="p-4">
@@ -120,21 +134,30 @@ const Posts = () => {
           {posts.map((post) => (
             <Card
               key={post._id}
-              className="bg-white shadow-lg rounded p-4 hover:shadow-xl transition duration-300 cursor-pointer"
+              className="bg-white shadow-lg rounded p-4 hover:shadow-xl transition duration-300"
             >
-              <div className="flex items-center gap-x-4">
-                {/* Username */}
-                <div className="text-gray-500 text-sm font-medium">
-                  <img
-                    src={
-                      "https://imebehavioralhealth.com/wp-content/uploads/2021/10/user-icon-placeholder-1.png"
-                    }
-                    className="h-16 w-16 rounded-full object-cover border-4 border-white shadow-md"
-                  />
+              <div className="flex items-center gap-x-4 justify-between">
+                <div className="flex items-center gap-x-4">
+                  {/* Username */}
+                  <div className="text-gray-500 text-sm font-medium">
+                    <img
+                      src={
+                        "https://imebehavioralhealth.com/wp-content/uploads/2021/10/user-icon-placeholder-1.png"
+                      }
+                      className="h-16 w-16 rounded-full object-cover border-4 border-white shadow-md"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-y-1 ">
+                    <span className="font-bold">{post.createdBy.username}</span>
+                  </div>
                 </div>
 
-                <div className="flex flex-col gap-y-1 ">
-                  <span className="font-bold">{post.createdBy.username}</span>
+                <div
+                  onClick={() => handleClick(post?._id)}
+                  className="cursor-pointer"
+                >
+                  <MdOpenInNew size={"25px"} />
                 </div>
               </div>
 
@@ -146,13 +169,38 @@ const Posts = () => {
                 <div className="text-gray-600 mb-4 text-sm">{post.content}</div>
 
                 {/* Date Time */}
-                <div className="mt-1 ">
+                <div className="flex justify-between items-center mt-1 ">
                   {/* Date */}
-                  <span className="text-gray-400 text-xs">
-                    {convertToDateString(post.createdAt)}
-                    {", "}
-                    {formattedTime(post.createdAt)}
-                  </span>
+                  <div>
+                    <span className="text-gray-400 text-xs">
+                      {convertToDateString(post.createdAt)}
+                      {", "}
+                      {formattedTime(post.createdAt)}
+                    </span>
+                  </div>
+
+                  <div className="flex gap-x-2">
+                    <div className="bg-gray-50 flex gap-x-2 px-2 py-1 rounded items-center">
+                      <FaRegCommentDots
+                        size={"18px"}
+                        // className={`${post.likes > 0} ? text-yellow-500 : '' `}
+                      />
+                      <span className="font-bold">0</span>
+                    </div>
+
+                    <div
+                      className="bg-gray-100 flex gap-x-2 px-2 py-1 rounded items-center cursor-pointer"
+                      onClick={() => handleLike(post?._id)}
+                    >
+                      <BiLike
+                        size={"18px"}
+                        className={`${
+                          post.likes > 0 ? "text-yellow-500" : ""
+                        }`}
+                      />
+                      <span className="font-bold">{post.likes}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>

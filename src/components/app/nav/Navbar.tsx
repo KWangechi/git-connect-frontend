@@ -9,12 +9,23 @@ import {
   UserCircle2,
 } from "lucide-react";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const { user } = useContext(AuthContext);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
+
+  const handleUserProfileClicked = () => {
+    navigate(`/developers/profile/${user?.username}`);
+  };
 
   return (
     <nav className="h-14 bg-white text-black px-4 flex justify-end items-center border-b z-50 shadow-md">
@@ -47,14 +58,23 @@ export const Navbar = () => {
         </div>
 
         {openMenu && (
-          <menu className="bg-gray-800 rounded py-4 px-6 absolute top-14 right-8 cursor-pointer">
-            <div className="text-white hover:text-gray-600 flex gap-x-2 items-center pb-3 ">
+          <menu className="bg-white rounded py-4 px-6 absolute top-14 right-8 cursor-pointer text-gray-900 flex flex-col gap-y-2">
+            <div className=" hover:text-gray-600 flex gap-x-2 items-center pb-3 ">
               <Settings size={14}></Settings>
               <span>Settings</span>
             </div>
+
             <div
-              className="text-white hover:text-gray-600 flex gap-x-2 items-center"
-              onClick={logout}
+              className=" hover:text-gray-600 flex gap-x-2 items-center pb-3"
+              onClick={handleUserProfileClicked}
+            >
+              <UserCircle2 size={14}></UserCircle2>
+              <span>My Profile</span>
+            </div>
+
+            <div
+              className=" hover:text-gray-600 flex gap-x-2 items-center"
+              onClick={handleLogout}
             >
               <LogOut size={14}></LogOut>
               <span>Logout</span>

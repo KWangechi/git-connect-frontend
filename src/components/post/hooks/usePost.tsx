@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-import { Post } from "@/utils/types";
+import { Post, PostComment } from "@/utils/types";
 import { api } from "@/utils/axios";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 function usePost() {
   const [posts, setPosts] = useState<Post[] | []>([]);
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [addingComment, setAddingComment] = useState<boolean>(false);
+  const [commentsLoading, setCommentsLoading] = useState<boolean>(false);
 
+  // const [loadingPosts, setLoadingPosts] = useState<boolean>(false)
+
+  const [postComments, setPostComments] = useState<PostComment[]>([]);
+
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,23 +41,22 @@ function usePost() {
     }
   };
 
-  const fetchPost = async (postId: string) => {
+  const fetchPost = async (id: string | undefined) => {
     setLoading(true);
     try {
-      const { data } = await api.get(`/posts/${postId}`);
+      const { data } = await api.get(`/posts/${id}`);
 
       if (data.status.code === 200) {
         setPost(data.data);
-        setLoading(false);
-        await getPosts();
+        // setLoading(false);
       } else {
         toast({
           description: data.status.message ?? "Error Occurred",
           duration: 2000,
         });
-        setLoading(false);
+        // setLoading(false);
       }
-      // setLoading(false);
+      setLoading(false);
     } catch (error: unknown) {
       toast({
         description: error instanceof Error ? error.message : "Error Occurred",
@@ -116,7 +123,7 @@ function usePost() {
     }
   };
 
-  const deletePost = async (username: string) => {
+  const deletePost = async (username: string | undefined) => {
     setLoading(true);
     try {
       const { data } = await api.delete(`/developers/${username}/posts`);
@@ -126,6 +133,7 @@ function usePost() {
           duration: 2000,
         });
         setLoading(false);
+        navigate("/posts");
       } else {
         toast({
           description: data.status.message ?? "Error Occurred",
@@ -143,6 +151,63 @@ function usePost() {
     setLoading(false);
   };
 
+  /**
+   * Toggle the like status of a post and avoid making a request to the backend
+   * @param id
+   */
+  const toggleLikeStatus = async (id: string | undefined) => {
+    // Optimistically update the frontend
+
+    try {
+      const response = await api.post(`/posts/${id}/toggleLikePost`);
+
+      if (response.data.status.code === 200) {
+        toast({
+          description: response.data.status.message,
+          duration: 2000,
+        });
+        setLoading(false);
+        await fetchPost(id);
+      }
+    } catch (error: unknown) {
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+        duration: 2000,
+      });
+      setLoading(false);
+    }
+  };
+
+  const fetchPostComments = async (id: string | undefined) => {
+    setCommentsLoading(true);
+    // TODO: Implement comment functionality here
+    // Example:
+    const response = await api.get(`/posts/${id}/comments`);
+
+    if (response.data.status.code === 200) {
+      setPostComments(response.data.data); // Placeholder return value for demonstration purposes. Replace with actual implementation.
+      setCommentsLoading(false);
+    }
+    // return comments.data.data;
+  };
+
+  const postComment = async (
+    id: string | undefined,
+    newComment: Record<string, string>
+  ) => {
+    setAddingComment(true);
+    const response = await api.post(`/posts/${id}/comments`, newComment);
+
+    if (response.data.status.code === 201) {
+      toast({
+        description: response.data.status.message,
+        duration: 2000,
+      });
+      setAddingComment(false);
+      await fetchPostComments(id);
+    }
+  };
+
   return {
     posts,
     post,
@@ -151,6 +216,12 @@ function usePost() {
     createPost,
     updatePost,
     deletePost,
+    toggleLikeStatus,
+    postComment,
+    fetchPostComments,
+    postComments,
+    addingComment,
+    commentsLoading,
   };
 }
 

@@ -54,8 +54,16 @@ export interface Post {
   title: string;
   content: string;
   userId: number | string;
+  likes: number;
   createdBy: Developer;
   createdAt: Date;
+}
+
+export interface PostComment {
+  _id?: string;
+  postId: string;
+  commentedBy: Developer;
+  content: string;
 }
 
 export interface ProfileCardProps {

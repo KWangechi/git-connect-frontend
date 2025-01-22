@@ -73,7 +73,7 @@ function Sidebar() {
                   }`
                 }
               >
-                <div className="mr-3 text-gray-400 group-hover:text-yellow-500">
+                <div className={`mr-3 text-gray-400 group-hover:text-yellow-500`}>
                   {item.icon}
                 </div>
                 <span
