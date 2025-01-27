@@ -36,8 +36,13 @@ function AppRoutes() {
               element: <DevelopersList />,
             },
             {
-              path: "profile/:username",
-              element: <ViewProfile />,
+              path: ":username",
+              children: [
+                {
+                  path: "profile",
+                  element: <ViewProfile />,
+                },
+              ],
             },
           ],
         },
@@ -52,7 +57,7 @@ function AppRoutes() {
             },
             {
               path: ":id",
-              element: <ViewPost/>,
+              element: <ViewPost />,
             },
           ],
         },

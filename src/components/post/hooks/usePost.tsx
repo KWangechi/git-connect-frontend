@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function usePost() {
   const [posts, setPosts] = useState<Post[] | []>([]);
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<Post>();
   const [loading, setLoading] = useState<boolean>(false);
   const [addingComment, setAddingComment] = useState<boolean>(false);
   const [commentsLoading, setCommentsLoading] = useState<boolean>(false);

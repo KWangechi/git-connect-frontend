@@ -1,62 +1,52 @@
 // import { Link } from "react-router-dom";
-// import { MdSend } from "react-icons/md";
-import { FaRegCommentDots } from "react-icons/fa6";
-import { BiLike } from "react-icons/bi";
+import { MdSend } from "react-icons/md";
 import {
   Card,
-  // CardContent,
+  CardContent,
   // CardDescription,
   // CardHeader,
-  // CardFooter,
+  CardFooter,
   // CardTitle,
   // CardDescription,
 } from "@/components/ui/card";
 import usePost from "./hooks/usePost";
-// import { ChangeEvent, FormEvent, useMemo, useState } from "react";
-// import { Post } from "@/utils/types";
-// import { Button } from "../ui/button";
-// import { Post } from "@/utils/types";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { Post as UserPost } from "@/utils/types";
+import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
-import { MdOpenInNew } from "react-icons/md";
-import { convertToDateString, formattedTime } from "@/utils/formateDate";
-import { useNavigate } from "react-router-dom";
+// import { MdOpenInNew } from "react-icons/md";
+// import { convertToDateString, formattedTime } from "@/utils/formateDate";
+// import { useNavigate } from "react-router-dom";
+import Post from "./Post";
 // import { appUrl } from "@/utils/axios";
 
 const Posts = () => {
-  const { posts, loading, toggleLikeStatus } = usePost();
+  const { posts, loading, createPost } = usePost();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // get currently logged in user
-  // const user = JSON.parse(localStorage.getItem("user"));
-  // const username = user.username;
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  const currentUsername = currentUser.username;
 
   // //get the current logged in user
-  // const [newPost, setNewPost] = useState<Partial<Post>>({
-  //   title: "",
-  //   content: "",
-  // });
+  const [newPost, setNewPost] = useState<Partial<UserPost>>({
+    title: "",
+    content: "",
+  });
 
-  // const handleInputChange =
-  //   (field: keyof typeof newPost) =>
-  //   (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //     setNewPost({ ...newPost, [field]: e.target.value });
-  //   };
+  const handleInputChange =
+    (field: keyof typeof newPost) =>
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setNewPost({ ...newPost, [field]: e.target.value });
+    };
 
-  // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   await createPost(newPost, username);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await createPost(newPost, currentUsername);
 
-  //   // if successful, clear the form
-  //   setNewPost({ title: "", content: "" });
-  // };
-
-  const handleClick = (postId: string | undefined) => {
-    navigate(`/posts/${postId}`);
-  };
-
-  const handleLike = (postId: string | undefined) => {
-    toggleLikeStatus(postId);
+    // if successful, clear the form
+    setNewPost({ title: "", content: "" });
   };
 
   return (
@@ -69,12 +59,9 @@ const Posts = () => {
       </div>
 
       {/* Card Form */}
-      {/* <div className="mb-6">
+      <div className="mb-6">
         <Card className="w-full bg-white shadow-lg rounded">
-          <div className="mb-4 px-7 py-4">
-            <span className="font-semibold">New Post</span>
-          </div>
-          <CardContent className="flex flex-col">
+          <CardContent className="flex flex-col mt-7 ">
             <form
               action=""
               method="post"
@@ -104,7 +91,7 @@ const Posts = () => {
                 ></textarea>
               </div>
 
-              <CardFooter className="flex justify-end h-14">
+              <CardFooter className="flex justify-end h-8">
                 <Button
                   type="submit"
                   className="bg-[#f65a11] hover:bg-[#22331D] text-white px-4 py-2 rounded flex items-center gap-x-2 shadow-md mt-6"
@@ -122,88 +109,17 @@ const Posts = () => {
             </form>
           </CardContent>
         </Card>
-      </div> */}
+      </div>
 
       {/* Posts Grid */}
       {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <Loader2 className="text-gray-300 animate-spin" size={"34px"} />
+        <div className="flex items-center justify-center h-[80vh]">
+          <Loader2 className="text-black animate-spin" size={"34px"} />
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-4">
           {posts.map((post) => (
-            <Card
-              key={post._id}
-              className="bg-white shadow-lg rounded p-4 hover:shadow-xl transition duration-300"
-            >
-              <div className="flex items-center gap-x-4 justify-between">
-                <div className="flex items-center gap-x-4">
-                  {/* Username */}
-                  <div className="text-gray-500 text-sm font-medium">
-                    <img
-                      src={
-                        "https://imebehavioralhealth.com/wp-content/uploads/2021/10/user-icon-placeholder-1.png"
-                      }
-                      className="h-16 w-16 rounded-full object-cover border-4 border-white shadow-md"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-y-1 ">
-                    <span className="font-bold">{post.createdBy.username}</span>
-                  </div>
-                </div>
-
-                <div
-                  onClick={() => handleClick(post?._id)}
-                  className="cursor-pointer"
-                >
-                  <MdOpenInNew size={"25px"} />
-                </div>
-              </div>
-
-              <div className="mt-4 flex flex-col gap-y-2">
-                {/* Title */}
-                <div className="text-lg italic font-semibold">{post.title}</div>
-
-                {/* Content */}
-                <div className="text-gray-600 mb-4 text-sm">{post.content}</div>
-
-                {/* Date Time */}
-                <div className="flex justify-between items-center mt-1 ">
-                  {/* Date */}
-                  <div>
-                    <span className="text-gray-400 text-xs">
-                      {convertToDateString(post.createdAt)}
-                      {", "}
-                      {formattedTime(post.createdAt)}
-                    </span>
-                  </div>
-
-                  <div className="flex gap-x-2">
-                    <div className="bg-gray-50 flex gap-x-2 px-2 py-1 rounded items-center">
-                      <FaRegCommentDots
-                        size={"18px"}
-                        // className={`${post.likes > 0} ? text-yellow-500 : '' `}
-                      />
-                      <span className="font-bold">0</span>
-                    </div>
-
-                    <div
-                      className="bg-gray-100 flex gap-x-2 px-2 py-1 rounded items-center cursor-pointer"
-                      onClick={() => handleLike(post?._id)}
-                    >
-                      <BiLike
-                        size={"18px"}
-                        className={`${
-                          post.likes > 0 ? "text-yellow-500" : ""
-                        }`}
-                      />
-                      <span className="font-bold">{post.likes}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            <Post post={post} key={post._id} showOpenInNewButton={true}/>
           ))}
         </div>
       )}

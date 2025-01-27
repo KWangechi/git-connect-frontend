@@ -35,7 +35,10 @@ api.interceptors.response.use(
   },
   (error) => {
     // Check if the response status code is 403
-    if (error.response && error.response.status === 403) {
+    if (
+      error.response &&
+      (error.response.status === 403 || error.response.status === 401)
+    ) {
       alert("Session expired! Sign In again...");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("isAuthenticated");

@@ -23,8 +23,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen text-gray-300">
-      <div className="w-full max-w-xl p-8 bg-gray-900 rounded-2xl">
+    <div className="flex items-center justify-center h-screen text-white">
+      <div className="w-full max-w-xl p-8 bg-[rgba(34,51,29,0.9)] rounded-2xl">
         <div className="">
           <div className="flex items-center justify-center">
             <img
@@ -45,7 +45,7 @@ const LoginPage = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-400"
+              className="block text-sm font-medium text-gray-300"
             >
               Username/Email
             </label>
@@ -65,7 +65,7 @@ const LoginPage = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-400"
+              className="block text-sm font-medium text-gray-300"
             >
               Password
             </label>

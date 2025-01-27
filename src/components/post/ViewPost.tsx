@@ -245,13 +245,15 @@ const ViewPost = () => {
                           }
                           className="h-8 w-8 rounded-full object-cover border-4 border-white shadow-md"
                         />
-                        <div className="flex flex-col gap-y-1">
+                        <div className="flex flex-col gap-y-0 w-full">
                           <span className="text-gray-500 text-xs">
                             {comment?.commentedBy.username}
                           </span>
                           <span className="text-gray-600 text-sm">
                             {comment?.content}
                           </span>
+
+                          <hr className="mt-4 mb-1 w-full" />
                         </div>
                       </div>
                     ))

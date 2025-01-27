@@ -7,7 +7,7 @@ function useDeveloper() {
   const [developers, setDevelopers] = useState<Developer[] | []>([]);
   const [developer, setDeveloper] = useState<Developer | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [userPosts, setUserPosts] = useState<Partial<Post[]> | []>([]);
+  const [userPosts, setUserPosts] = useState<Post[] | []>([]);
 
   const { toast } = useToast();
 

@@ -101,7 +101,7 @@ const DevelopersList = () => {
 
               {/* Footer Section */}
               <div className="flex justify-end text-green-500 pr-4 pb-4">
-                <Link to={`/developers/profile/${user.username}`}>
+                <Link to={`/developers/${user.username}/profile`}>
                   <span className="underline">View More</span>
                 </Link>
               </div>
