@@ -5,15 +5,28 @@ import usePost from "./hooks/usePost";
 import { convertToDateString, formattedTime } from "@/utils/formateDate";
 import { FaRegCommentDots } from "react-icons/fa6";
 import { BiLike } from "react-icons/bi";
-import { Edit, MoreVertical, Trash } from "lucide-react";
+import { Edit, Loader2, MoreVertical, Trash } from "lucide-react";
 import { MdOpenInNew } from "react-icons/md";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import useDeveloper from "@/hooks/useDeveloper";
+// import { Dialog } from "@radix-ui/react-dialog";
+// import {
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogTrigger,
+// } from "../ui/dialog";
+// import { Button } from "../ui/button";
 // import { createPortal } from "react-dom";
 
 const Post = ({
   post,
   postPermissions,
   showOpenInNewButton,
+  children,
 }: {
   post: UserPost;
   postPermissions?: {
@@ -23,11 +36,20 @@ const Post = ({
     canRead: boolean;
   };
   showOpenInNewButton?: boolean;
+  children?: React.ReactNode;
 }) => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  // const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const { toggleLikeStatus } = usePost();
+
+  const { updateUserPost, deleteUserPost, loading } = useDeveloper();
+
+  const { user: currentUser } = useContext(AuthContext);
+  const username = currentUser?.username;
+
+  const [updatedPost, setUpdatedPost] = useState<UserPost>(post);
 
   const handleLike = (postId: string | undefined) => {
     toggleLikeStatus(postId);
@@ -37,21 +59,27 @@ const Post = ({
     navigate(`/developers/${clickedUsername}/profile`);
   };
 
-  // const handleOpenMenu = (postId: string | undefined) => {
-  //   setMenuOpen(true);
-  //   console.log(postId);
-  //   // set the postId to open the menu for
-  //   // setPostIdForMenu(postId);
-  // };
+  const handleEditButtonClicked = () => {
+    setShowModal(true);
+  };
 
-  const handleEditButtonClicked = (postId: string | undefined) => {
-    console.log(postId);
-    // editPost();
-    // open an Edit Modal
+  const handleDeleteButtonClicked = () => {
+    setDeleteModal(true);
+  };
+
+  const handleDeletePost = async () => {
+    await deleteUserPost(username, updatedPost?._id);
+    setDeleteModal(false);
   };
 
   const handleOpenInNew = (postId: string | undefined) => {
     navigate(`/posts/${postId}`);
+  };
+
+  const handleSave = async (username: string) => {
+    await updateUserPost(updatedPost, username);
+    setShowModal(false);
+    setMenuOpen(false);
   };
 
   return (
@@ -63,7 +91,7 @@ const Post = ({
         <div className="flex items-center gap-x-4 justify-between">
           <div
             className="flex items-center gap-x-4 cursor-pointer"
-            onClick={() => goToProfile(post.createdBy.username)}
+            onClick={() => goToProfile(post.createdBy?.username)}
           >
             {/* Username */}
             <div className="text-gray-500 text-sm font-medium">
@@ -76,7 +104,7 @@ const Post = ({
             </div>
 
             <div className="flex flex-col gap-y-1 ">
-              <span className="font-bold">{post.createdBy.username}</span>
+              <span className="font-bold">{post.createdBy?.username}</span>
             </div>
           </div>
 
@@ -101,18 +129,107 @@ const Post = ({
 
             {menuOpen && (
               <menu className="bg-gray-200 rounded py-4 px-6 absolute top-10 right-2 cursor-pointer text-gray-900 flex flex-col gap-y-2">
-                <div className=" hover:text-gray-600 flex gap-x-2 items-center pb-3 ">
+                <div
+                  className=" hover:text-gray-600 flex gap-x-2 items-center pb-3"
+                  onClick={handleEditButtonClicked}
+                >
                   <Edit size={14}></Edit>
                   <span>Edit</span>
                 </div>
 
+                {/* Modal Overlay */}
+                {showModal && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    {/* Modal Content */}
+                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                      {/* Modal Header */}
+                      <div className="flex justify-between items-center border-b pb-3">
+                        <h2 className="text-lg font-semibold">Edit Post</h2>
+                        <button
+                          className="text-gray-600 hover:text-gray-800"
+                          onClick={() => setShowModal(false)}
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {/* Modal Body */}
+                      <div className="space-y-4 mt-4">
+                        {/* Title Input */}
+                        <div className="flex flex-col">
+                          <label htmlFor="title" className="font-medium">
+                            Title
+                          </label>
+                          <input
+                            id="title"
+                            type="text"
+                            className="border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            value={updatedPost.title}
+                            onChange={(e) =>
+                              setUpdatedPost({
+                                ...updatedPost,
+                                title: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        {/* Content Input */}
+                        <div className="flex flex-col">
+                          <label htmlFor="content" className="font-medium">
+                            Content
+                          </label>
+                          <textarea
+                            id="content"
+                            className="border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                            rows={4}
+                            value={updatedPost.content}
+                            onChange={(e) =>
+                              setUpdatedPost({
+                                ...updatedPost,
+                                content: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      {/* Modal Footer */}
+                      <div className="flex justify-end mt-4 space-x-2">
+                        <button
+                          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                          onClick={() => setShowModal(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex gap-x-2"
+                          onClick={() => handleSave(post.createdBy?.username)}
+                        >
+                          Save changes
+                          {loading && <Loader2 className="animate-spin" />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div
                   className=" hover:text-gray-600 flex gap-x-2 items-center pb-3"
-                  onClick={() => handleEditButtonClicked(post?._id)}
+                  onClick={handleDeleteButtonClicked}
                 >
                   <Trash size={14}></Trash>
                   <span>Delete</span>
                 </div>
+                {/* Delete Modal */}
+
+                {deleteModal && (
+                  <DeleteConfirmationModal
+                    isOpen={deleteModal}
+                    onConfirm={handleDeletePost}
+                    onClose={() => setDeleteModal(false)}
+                  ></DeleteConfirmationModal>
+                )}
               </menu>
             )}
           </div>
@@ -158,52 +275,52 @@ const Post = ({
             </div>
           </div>
         </div>
+
+        <div>{children}</div>
       </Card>
     </div>
   );
 };
 
-// export function DialogDemo() {
-//   return (
-//     <Dialog>
-//       <DialogTrigger asChild>
-//         <Button variant="outline">Edit Profile</Button>
-//       </DialogTrigger>
-//       <DialogContent className="sm:max-w-[425px]">
-//         <DialogHeader>
-//           <DialogTitle>Edit profile</DialogTitle>
-//           <DialogDescription>
-//             Make changes to your profile here. Click save when you're done.
-//           </DialogDescription>
-//         </DialogHeader>
-//         <div className="grid gap-4 py-4">
-//           <div className="grid grid-cols-4 items-center gap-4">
-//             <Label htmlFor="name" className="text-right">
-//               Name
-//             </Label>
-//             <Input
-//               id="name"
-//               defaultValue="Pedro Duarte"
-//               className="col-span-3"
-//             />
-//           </div>
-//           <div className="grid grid-cols-4 items-center gap-4">
-//             <Label htmlFor="username" className="text-right">
-//               Username
-//             </Label>
-//             <Input
-//               id="username"
-//               defaultValue="@peduarte"
-//               className="col-span-3"
-//             />
-//           </div>
-//         </div>
-//         <DialogFooter>
-//           <Button type="submit">Save changes</Button>
-//         </DialogFooter>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
+const DeleteConfirmationModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-sm p-6">
+        {/* Modal Header */}
+        <h2 className="text-lg font-semibold text-center">Confirm Deletion</h2>
+        <p className="text-gray-600 text-sm text-center mt-2">
+          Are you sure you want to delete this item? This action cannot be
+          undone.
+        </p>
+
+        {/* Modal Footer */}
+        <div className="flex justify-center mt-4 space-x-3">
+          <button
+            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            onClick={onConfirm}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Post;

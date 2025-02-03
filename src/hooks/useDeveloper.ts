@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Developer, Post } from "@/utils/types";
 import { api } from "@/utils/axios";
 import { useToast } from "./use-toast";
@@ -11,7 +11,7 @@ function useDeveloper() {
 
   const { toast } = useToast();
 
-  useMemo(() => {
+  useEffect(() => {
     const getDevelopers = async () => {
       try {
         setLoading(true);
@@ -142,6 +142,7 @@ function useDeveloper() {
       const { data } = await api.get(`/developers/${username}/posts`);
       if (data.status.code === 200) {
         setUserPosts(data.data);
+        console.log("Data fetced: ", data.data);
       } else {
         toast({
           description: data.status.message ?? "Error Occurred",
@@ -158,6 +159,85 @@ function useDeveloper() {
     }
   };
 
+  const updateUserPost = async (updatedPost: Post, username: string) => {
+    setUserPosts([]);
+    setLoading(true);
+    try {
+      const { data } = await api.patch(
+        `/developers/${username}/posts/${updatedPost?._id}`,
+        updatedPost
+      );
+      if (data.status.code === 200) {
+        toast({
+          description: "Post updated!",
+          duration: 2000,
+        });
+
+        await fetchUserPosts(username);
+        // setUserPosts([...data.data]);
+        setLoading(false);
+      } else {
+        toast({
+          description: data.status.message ?? "Error Occurred",
+          duration: 2000,
+        });
+      }
+      setLoading(false);
+    } catch (error: unknown) {
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+        duration: 2000,
+      });
+      setLoading(false);
+    }
+  };
+
+  const deleteUserPost = async (
+    username: string | undefined,
+    postId: string | undefined
+  ) => {
+    if (!postId) {
+      throw new Error("Post ID is required");
+    }
+
+    if (!username) {
+      throw new Error("Username is required");
+    }
+
+    setLoading(true);
+    try {
+      const { data } = await api.delete(
+        `/developers/${username}/posts/${postId}`
+      );
+      if (data.status.code === 204) {
+        toast({
+          description: data.status.message,
+          duration: 2000,
+        });
+        setLoading(false);
+        // navigate("/posts");
+        setUserPosts((prevPosts) =>
+          prevPosts.filter((post) => post?._id !== postId)
+        );
+
+        // await fetchUserPosts(username);
+      } else {
+        toast({
+          description: data.status.message ?? "Error Occurred",
+          duration: 2000,
+        });
+        // setLoading(false);
+      }
+      setLoading(false);
+    } catch (error: unknown) {
+      toast({
+        description: error instanceof Error ? error.message : "Error Occurred",
+        duration: 2000,
+      });
+    }
+    setLoading(false);
+  };
+
   return {
     developers,
     developer,
@@ -169,6 +249,8 @@ function useDeveloper() {
     // posts
     fetchUserPosts,
     userPosts,
+    updateUserPost,
+    deleteUserPost,
   };
 }
 

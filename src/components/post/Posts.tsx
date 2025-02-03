@@ -10,24 +10,17 @@ import {
   // CardDescription,
 } from "@/components/ui/card";
 import usePost from "./hooks/usePost";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { Post as UserPost } from "@/utils/types";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
-// import { MdOpenInNew } from "react-icons/md";
-// import { convertToDateString, formattedTime } from "@/utils/formateDate";
-// import { useNavigate } from "react-router-dom";
 import Post from "./Post";
-// import { appUrl } from "@/utils/axios";
-
+import { AuthContext } from "../context/AuthContext";
 const Posts = () => {
   const { posts, loading, createPost } = usePost();
 
-  // const navigate = useNavigate();
-
-  // get currently logged in user
-  const currentUser = JSON.parse(localStorage.getItem("user"));
-  const currentUsername = currentUser.username;
+  const { user: currentUser } = useContext(AuthContext);
+  const currentUsername = currentUser?.username;
 
   // //get the current logged in user
   const [newPost, setNewPost] = useState<Partial<UserPost>>({
@@ -43,7 +36,9 @@ const Posts = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await createPost(newPost, currentUsername);
+    if (currentUsername) {
+      await createPost(newPost, currentUsername);
+    }
 
     // if successful, clear the form
     setNewPost({ title: "", content: "" });
@@ -119,7 +114,7 @@ const Posts = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mt-4">
           {posts.map((post) => (
-            <Post post={post} key={post._id} showOpenInNewButton={true}/>
+            <Post post={post} key={post._id} showOpenInNewButton={true} />
           ))}
         </div>
       )}

@@ -1,6 +1,6 @@
 // import { Label } from "@radix-ui/react-label";
 import { appUrl } from "@/utils/axios";
-import { Developer } from "@/utils/types";
+import { Developer, Post as UserPost } from "@/utils/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { useEffect, useState } from "react";
 import useDeveloper from "@/hooks/useDeveloper";
@@ -25,9 +25,29 @@ const ProfileCard = ({
 }) => {
   const [tabValue, setTabValue] = useState<string>("professional_info");
 
+  const { username } = useParams();
+  const { userPosts: posts, fetchUserPosts, loading: userPostsLoading } = useDeveloper();
+
+  useEffect(() => {
+    if (username) {
+      fetchUserPosts(username);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('Parent Component has re-rendered... get latest posts');
+  }, [posts]);
+
+  // what if I use useMemo() to get the posts and only fetch them when the value changes?
+  // useMemo(() => {
+  //   if (username && posts.length === 0) {
+  //     fetchUserPosts(username);
+  //   }
+  // }, [posts.length, username]);
+
   // in my postPermissions, just include the permissions for "Posts" and "Comments"
   const postPermissions = permissions["Posts"];
-  const commentPermissions = permissions["Comments"];
+  // const commentPermissions = permissions["Comments"];
 
   return (
     <div>
@@ -91,9 +111,34 @@ const ProfileCard = ({
               <ProfessionalInfo />
             </TabsContent>
             <TabsContent value="posts" className="w-full">
+              {/* // this component needs to re-render if the posts change */}
+              {/* {<div className="flex flex-col gap-6 w-full">
+                {posts.length === 0 && (
+                  <div className="text-gray-600 text-center py-8">
+                    No posts found.
+                  </div>
+                )}
+                {posts.map((post: UserPost) => (
+                  <Post
+                    key={post?._id}
+                    post={post}
+                    postPermissions={postPermissions}
+                  />
+                ))}
+
+              { <div className="flex justify-center mt-6">
+                  <button className="bg-[#f65a11] text-white px-4 py-2 rounded shadow">
+                    Load More
+                  </button>
+                </div> }
+              </div> } */}
+
+
               <DevPosts
                 postPermissions={postPermissions}
-                commentPermissions={commentPermissions}
+                posts={posts}
+                loading={userPostsLoading}
+                // commentPermissions={commentPermissions}
               />
             </TabsContent>
           </Tabs>
@@ -189,43 +234,33 @@ const ProfessionalInfo = () => {
 
 const DevPosts = ({
   postPermissions,
-  commentPermissions,
-}: {
+  posts,
+  loading
+}: // commentPermissions,
+{
   postPermissions: {
     canCreate: boolean;
     canDelete: boolean;
     canRead: boolean;
     canEdit: boolean;
   };
-  commentPermissions?: {
-    canCreate: boolean;
-    canDelete: boolean;
-    canRead: boolean;
-    canEdit: boolean;
-  };
+  posts: UserPost[];
+  loading: boolean
+  // commentPermissions?: {
+  //   canCreate: boolean;
+  //   canDelete: boolean;
+  //   canRead: boolean;
+  //   canEdit: boolean;
+  // };
 }) => {
-  const { username } = useParams();
-  const {
-    fetchUserPosts,
-    userPosts: posts,
-    loading: userPostsLoading,
-  } = useDeveloper();
 
-  useEffect(() => {
-    if (username) {
-      fetchUserPosts(username);
-    }
-  }, []);
 
-  if (!posts) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex w-full py-4 ">
       {/* Posts Section */}
-      <div className="flex flex-col gap-6 w-full">
-        {userPostsLoading ? (
+      <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-6 w-full">
+        {loading ? (
           <div className="flex items-center justify-center mt-4">
             <Loader2 className="text-gray-500 animate-spin" size={"34px"} />
           </div>
@@ -237,7 +272,7 @@ const DevPosts = ({
           posts.map((post) => (
             <Post
               post={post}
-              key={post._id}
+              key={post?._id}
               postPermissions={postPermissions}
               showOpenInNewButton={true}
             />

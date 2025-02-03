@@ -53,7 +53,7 @@ export interface Post {
   _id?: string;
   title: string;
   content: string;
-  userId: number | string;
+  userId: string;
   likes: number;
   createdBy: Developer;
   createdAt: Date;

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Post, PostComment } from "@/utils/types";
 import { api } from "@/utils/axios";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function usePost() {
   const [posts, setPosts] = useState<Post[] | []>([]);
-  const [post, setPost] = useState<Post>();
+  const [post, setPost] = useState<Post>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [addingComment, setAddingComment] = useState<boolean>(false);
   const [commentsLoading, setCommentsLoading] = useState<boolean>(false);
@@ -15,7 +15,7 @@ function usePost() {
 
   const [postComments, setPostComments] = useState<PostComment[]>([]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -23,9 +23,8 @@ function usePost() {
   }, []);
 
   const getPosts = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-
       const { data } = await api.get("/posts");
 
       if (data.status.code === 200) {
@@ -93,64 +92,6 @@ function usePost() {
     }
   };
 
-  const updatePost = async (updatedPost: Post, username: string) => {
-    setLoading(true);
-    try {
-      const { data } = await api.put(
-        `/developers/${username}/posts/${updatedPost?._id}`,
-        updatedPost
-      );
-      if (data.status.code === 200) {
-        toast({
-          description: "Profile updated successfully!",
-          duration: 2000,
-        });
-        setPost(data.data);
-        setLoading(false);
-      } else {
-        toast({
-          description: data.status.message ?? "Error Occurred",
-          duration: 2000,
-        });
-      }
-      setLoading(false);
-    } catch (error: unknown) {
-      toast({
-        description: error instanceof Error ? error.message : "Error Occurred",
-        duration: 2000,
-      });
-      setLoading(false);
-    }
-  };
-
-  const deletePost = async (username: string | undefined) => {
-    setLoading(true);
-    try {
-      const { data } = await api.delete(`/developers/${username}/posts`);
-      if (data.status.code === 204) {
-        toast({
-          description: "Post deleted successfully!",
-          duration: 2000,
-        });
-        setLoading(false);
-        navigate("/posts");
-      } else {
-        toast({
-          description: data.status.message ?? "Error Occurred",
-          duration: 2000,
-        });
-        // setLoading(false);
-      }
-      setLoading(false);
-    } catch (error: unknown) {
-      toast({
-        description: error instanceof Error ? error.message : "Error Occurred",
-        duration: 2000,
-      });
-    }
-    setLoading(false);
-  };
-
   /**
    * Toggle the like status of a post and avoid making a request to the backend
    * @param id
@@ -208,18 +149,53 @@ function usePost() {
     }
   };
 
+  const updatePostComment = async (
+    id: string | undefined,
+    commentId: string | undefined,
+    newComment: Record<string, string>
+  ) => {
+    setAddingComment(true);
+    const response = await api.patch(
+      `/posts/${id}/comments/${commentId}`,
+      newComment
+    );
+
+    if (response.data.status.code === 200) {
+      toast({
+        description: response.data.status.message,
+        duration: 2000,
+      });
+      setAddingComment(false);
+      await fetchPostComments(id);
+    }
+  };
+
+  const deletePostComment = async (
+    id: string | undefined,
+    commentId: string | undefined
+  ) => {
+    const response = await api.delete(`/posts/${id}/comments/${commentId}`);
+    if (response.data.status.code === 200) {
+      toast({
+        description: response.data.status.message,
+        duration: 2000,
+      });
+      await fetchPostComments(id);
+    }
+  };
+
   return {
     posts,
     post,
     loading,
     fetchPost,
     createPost,
-    updatePost,
-    deletePost,
     toggleLikeStatus,
     postComment,
     fetchPostComments,
+    deletePostComment,
     postComments,
+    updatePostComment,
     addingComment,
     commentsLoading,
   };
